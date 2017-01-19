@@ -22,6 +22,11 @@ def followings_remove_duplicates(ID):
             conn.commit()
         print(index)
         index = index +1
+        try:
+            a = temp["big_list"]
+        except Exception as e:
+            print(e)
+            return "p"
         if temp["big_list"] == False:
             break
         if next_max_id == temp["next_max_id"]:
@@ -35,6 +40,7 @@ def followings_remove_duplicates(ID):
             time.sleep(180)
             time1 = 1
     print("Completed remove the duplicate!")
+    return "c"
 
 def followers_remove_duplicates(ID):
     next_max_id = ''
@@ -51,6 +57,11 @@ def followers_remove_duplicates(ID):
             conn.commit()
         print(index)
         index = index + 1
+        try:
+            a = temp["big_list"]
+        except Exception as e:
+            print(e)
+            return "p"
         if temp["big_list"] == False:
             break
         if next_max_id == temp["next_max_id"]:
@@ -64,6 +75,7 @@ def followers_remove_duplicates(ID):
             time.sleep(180)
             time1 = 1
     print("Completed remove the duplicate!")
+    return 'c'
 
 def getTotalFollowing(category,num):
     print("Push the data to the followings from remove_dup!")
@@ -190,7 +202,13 @@ if __name__ == "__main__":
                 conn.commit()
             else:
                 delete_sql()
-                followers_remove_duplicates(item)
+                marka = followers_remove_duplicates(item)
+                if marka == 'p':
+                    sqlP = "update followers set mark='P' WHERE  followerID= '%s'" % (str(item))
+                    print("The person is primary! Follower")
+                    cur.execute(sqlP)
+                    conn.commit()
+                    continue
                 a = getTotalFollower(cate_push, follower_num)
                 follower_num = a
                 delete_sql()
@@ -218,7 +236,13 @@ if __name__ == "__main__":
                 conn.commit()
             else:
                 delete_sql()
-                followers_remove_duplicates(item)
+                marka2 = followers_remove_duplicates(item)
+                if marka == 'p':
+                    sqlP = "update followers set mark='P' WHERE  followerID= '%s'" % (str(item))
+                    print("The person is primary! Following")
+                    cur.execute(sqlP)
+                    conn.commit()
+                    continue
                 a = getTotalFollower(cate_push, follower_num)
                 follower_num = a
                 delete_sql()

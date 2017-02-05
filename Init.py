@@ -184,99 +184,7 @@ def get_cate():
     fdict = dict(cate_get=row[0], cate_push=row[1])
     return fdict
 
-
-
 if __name__ == "__main__":
-    InstagramAPI = InstagramAPI("johnstone7523", "zhao736762141")
-    InstagramAPI.login()  # login
-    conn = pymysql.connect(host='localhost', user='root', passwd='123456', db='instagram', port=3306)
-    cur = conn.cursor()
-    cdict = get_cate()
-    cate_get = cdict["cate_get"]
-    cate_push = cdict["cate_push"]
-    follower_num = followersNum()
-    following_num = followingsNum()
-    while 1:
-        followers = get_follower_ID(cate_get)
-        followings = get_following_ID(cate_get)
-        for item in followers:
-            count = getUserCount(item)
-            #如果userProfile表中没有这个ID，则读；如果有则更新状态
-            if findID(item): #如果已经读取过了更新成B
-                sql = "update followers set mark='B' WHERE followerID='%s'"%(str(item))
-                print("It has been read the person's relationship!  Follower")
-                cur.execute(sql)
-                conn.commit()
-            elif (count[0]>1000000 or count[1]>1000000):#如果大于100万则更新成C
-                sql1 = "update followers set mark='C' WHERE followerID='%s'" % (str(item))
-                print("The person's relationship is too large,so it will read at last! Follower")
-                cur.execute(sql1)
-                conn.commit()
-            else:
-                delete_sql()
-                marka = followers_remove_duplicates(item)
-                if marka == 'p':
-                    sqlP = "update followers set mark='P' WHERE  followerID= '%s'" % (str(item))
-                    print("The person is primary! Follower")
-                    cur.execute(sqlP)
-                    conn.commit()
-                    continue
-                a = getTotalFollower(cate_push, follower_num)
-                follower_num = a
-                delete_sql()
-                followings_remove_duplicates(item)
-                b = getTotalFollowing(cate_push, following_num)
-                following_num = b
-                getUserProfile(item)
-                sql = "update followers set mark='B' WHERE followerID='%s'" % (str(item))
-                print("It has been read one person!")
-                cur.execute(sql)
-                conn.commit()
-                cate_push = cate_push + 1
-                update_cate(cate_get, cate_push)
-        for item in followings:
-            count = getUserCount(item)
-            # 如果userProfile表中没有这个ID，则读；如果有则更新状态
-            if findID(item):  # 如果已经读取过了更新成B
-                sql = "update followings set mark='B' WHERE followingID='%s'" % (str(item))
-                print("It has been read the person's relationship! Following")
-                cur.execute(sql)
-                conn.commit()
-                continue
-            elif (count[0] > 1000000 or count[1]>1000000):
-                sql1 = "update followings set mark='C' WHERE followingID='%s'" % (str(item))
-                print("The person's relationship is too large,so it will read at last! Following")
-                cur.execute(sql1)
-                conn.commit()
-            else:
-                delete_sql()
-                marka2 = followers_remove_duplicates(item)
-                if marka2 == 'p':
-                    sqlP = "update followings set mark='P' WHERE  followingID= '%s'" % (str(item))
-                    print("The person is primary! Following")
-                    cur.execute(sqlP)
-                    conn.commit()
-                    continue
-                a = getTotalFollower(cate_push, follower_num)
-                follower_num = a
-                delete_sql()
-                followings_remove_duplicates(item)
-                b = getTotalFollowing(cate_push, following_num)
-                following_num = b
-                getUserProfile(item)
-                sql = "update followings set mark='B' WHERE followingID='%s'" % (str(item))
-                print("It has been read one person!")
-                cur.execute(sql)
-                conn.commit()
-                cate_push = cate_push +1
-                update_cate(cate_get, cate_push)
-        cate_get = cate_get + 1
-        update_cate(cate_get, cate_push)
-
-
-
-
-'''if __name__ == "__main__":
     InstagramAPI = InstagramAPI("johnstone7523", "zhao736762141")
     InstagramAPI.login()  # login
     conn = pymysql.connect(host='localhost', user='root', passwd='123456', db='instagram', port=3306)
@@ -297,5 +205,4 @@ if __name__ == "__main__":
     getTotalFollowing(0, 1)
     getUserProfile('3322468295')
     cate_push = cate_push + 1
-    update_cate(cate_get, cate_push)'''
-
+    update_cate(cate_get, cate_push)

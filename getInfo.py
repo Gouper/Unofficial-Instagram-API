@@ -10,10 +10,11 @@ InstagramAPI.login()
 #3293680605   'vincentcassel',//141668
 #vergegirl   ''29360069
 
-InstagramAPI.getUsernameInfo('29360069')
+InstagramAPI.getUsernameInfo('3322468295')
 exa = InstagramAPI.LastJson
 print(exa)
-
+InstagramAPI.getProfileData()
+print(type(exa['user']['following_count']))
 for key in exa['user'].keys():
     f.write(key+'\n')
     print(key+'\n')

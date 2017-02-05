@@ -387,13 +387,13 @@ class InstagramAPI:
         return popularFeed
 
     def getUserFollowings(self, usernameId, maxid=''):
-        #if maxid == '':
-           # return self.SendRequest('friendships/' + str(usernameId) + '/following/?rank_token=' + self.rank_token)
-        #else:
-            #return self.SendRequest(
-           # 'friendships/' + str(usernameId) + '/following/?rank_token=' + self.rank_token + '&max_id=' + str(maxid))
-        return self.SendRequest('friendships/' + str(usernameId) + '/following/?max_id=' + str(maxid)
-                                + '&ig_sig_key_version=' + self.SIG_KEY_VERSION + '&rank_token=' + self.rank_token)
+        if maxid == '':
+            return self.SendRequest('friendships/' + str(usernameId) + '/following/?rank_token=' + self.rank_token)
+        else:
+            return self.SendRequest(
+            'friendships/' + str(usernameId) + '/following/?rank_token=' + self.rank_token + '&max_id=' + str(maxid))
+        #return self.SendRequest('friendships/' + str(usernameId) + '/following/?max_id=' + str(maxid)
+                              #  + '&ig_sig_key_version=' + self.SIG_KEY_VERSION + '&rank_token=' + self.rank_token)
 
     def getSelfUsersFollowing(self):
 

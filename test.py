@@ -10,10 +10,11 @@ InstagramAPI = InstagramAPI("johnstone7523", "zhao736762141")
 InstagramAPI.login() # login
 
 f = open("info.txt","w+")
-usernameId = ['1275759271','535065013']
+usernameId = ['12165477','535065013']
 
-InstagramAPI.getUsernameInfo('29360069')
+InstagramAPI.getUsernameInfo('11716834')
 exa = InstagramAPI.LastJson
+print(exa)
 for key in exa['user'].keys():
     f.write(key+'\n')
     print(key+'\n')
@@ -28,7 +29,7 @@ for i in usernameId:
     followers = []
     next_max_id = ''
     while 1:
-        InstagramAPI.getUserFollowers(i, next_max_id)
+        InstagramAPI.getUserFollowings(i, next_max_id)
         temp = InstagramAPI.LastJson
 
         for item in temp["users"]:
@@ -59,21 +60,3 @@ for i in usernameId:
 #AQAlifT_ar8JO_cgirPhGUaa5O-MgZc7l9Jk_SvNaKS-fAzyvTwN0FrXR8E2AtvJEnQLyIpIpStGtaEQEIQM1oAY_Ln3rWptJg31EGAel4h-TPsOZmK-2G46pb6iobBlwuE
 
 g.close()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

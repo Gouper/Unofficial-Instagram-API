@@ -21,6 +21,12 @@ def followings_remove_duplicates(ID):
             cur.execute(sql,param)
             conn.commit()
         print(index)
+        if (index >= 10 and index <= 12):
+            sql2 = "select * from remove_dup"
+            cur.execute(sql2)
+            num = int(cur.rowcount) + 1
+            if num<=201:
+                return "s"
         index = index + 1
         try:
             a = temp["big_list"]
@@ -55,6 +61,12 @@ def followers_remove_duplicates(ID):
             cur.execute(sql,param)
             conn.commit()
         print(index)
+        if (index >= 10 and index <= 12):
+            sql2 = "select * from remove_dup"
+            cur.execute(sql2)
+            num = int(cur.rowcount) + 1
+            if num<=201:
+                return "s"
         index = index + 1
         try:
             a = temp["big_list"]
@@ -221,6 +233,12 @@ if __name__ == "__main__":
                     cur.execute(sqlP)
                     conn.commit()
                     continue
+                elif marka == 's':
+                    sqlS = "update followers set mark = 'D' WHERE followerID= '%s'" % (str(item))
+                    print("The person  is loop! Follower")
+                    cur.execute(sqlS)
+                    conn.commit()
+                    continue
                 a = getTotalFollower(cate_push, follower_num)
                 follower_num = a
                 delete_sql()
@@ -255,6 +273,12 @@ if __name__ == "__main__":
                     sqlP = "update followings set mark='P' WHERE  followingID= '%s'" % (str(item))
                     print("The person is primary! Following")
                     cur.execute(sqlP)
+                    conn.commit()
+                    continue
+                elif marka2 == 's':
+                    sqlS = "update followings set mark = 'D' WHERE followingID= '%s'" % (str(item))
+                    print("The person  is loop! Following")
+                    cur.execute(sqlS)
                     conn.commit()
                     continue
                 a = getTotalFollower(cate_push, follower_num)

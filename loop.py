@@ -91,16 +91,17 @@ def getTotalFollowing(category,num):
     print("Push the data to the followings from remove_dup!")
     sql1 = "select * from remove_dup"
     sql2 = "insert into followings(num, userID, followingID, category, mark)VALUES (%s, %s, %s, %s, %s)"
+    values = []
     cur.execute(sql1)
     results = cur.fetchall()
     for row in results:
         userID = row[0]
         followingID = row[1]
         mark = 'A'
-        param = (num, userID, followingID, category, mark)
-        cur.execute(sql2, param)
-        conn.commit()
+        values.append((num, userID, followingID, category, mark))
         num = num + 1
+    cur.executemany(sql2, values)
+    conn.commit()
     print("It has been put the message to followings database!")
     return num
 
@@ -108,16 +109,17 @@ def getTotalFollower(category,num):
     print("Push the data to the followers from remove_dup!")
     sql1 = "select * from remove_dup"
     sql2 = "insert into followers(num, userID, followerID, category, mark)VALUES (%s, %s, %s, %s, %s)"
+    values=[]
     cur.execute(sql1)
     results = cur.fetchall()
     for row in results:
         userID = row[0]
-        followingID = row[1]
+        followerID = row[1]
         mark = 'A'
-        param = (num, userID, followingID, category, mark)
-        cur.execute(sql2, param)
-        conn.commit()
+        values.append((num, userID, followerID, category, mark))
         num = num + 1
+    cur.executemany(sql2, values)
+    conn.commit()
     print("It has been put the message to followers database!")
     return num
 
@@ -142,20 +144,32 @@ def getUserProfile(ID):
     param = (ID, username, full_name, is_verified, follower_count, following_count)
     cur.execute(sql, param)
     conn.commit()
+def getUserNoProfile(ID):
+    username = 'N'
+    full_name = 'N'
+    is_verified = 'N'
+    follower_count = 0
+    following_count = 0
+    sql = "insert into userProfile(userID, username, full_name, is_verified, follower_count, following_count)VALUES (%s,%s,%s,%s,%s,%s)"
+    param = (ID, username, full_name, is_verified, follower_count, following_count)
+    cur.execute(sql, param)
+    conn.commit()
 def delete_sql():
     sql = "delete from remove_dup"
     cur.execute(sql)
     conn.commit()
     print("It has been delete the sql!")
 def followingsNum():
-    sql = "select * from followings"
+    sql = "select COUNT(*) from followings"
     cur.execute(sql)
-    num = int(cur.rowcount) + 1
+    countF = cur.fetchone()[0] + 1
+    num = countF + 1
     return num
 def followersNum():
-    sql = "select * from followers"
+    sql = "select COUNT(*) from followers"
     cur.execute(sql)
-    num = int(cur.rowcount) + 1
+    countF = cur.fetchone()[0] + 1
+    num = countF + 1
     return num
 def get_follower_ID(cate):
     followerID = []
@@ -245,7 +259,11 @@ if __name__ == "__main__":
                 followings_remove_duplicates(item)
                 b = getTotalFollowing(cate_push, following_num)
                 following_num = b
-                getUserProfile(item)
+                try:
+                    getUserProfile(item)
+                except Exception as e:
+                    print(Exception,":",e)
+                    getUserNoProfile(item)
                 sql = "update followers set mark='B' WHERE followerID='%s'" % (str(item))
                 print("It has been read one person!")
                 cur.execute(sql)
@@ -287,7 +305,11 @@ if __name__ == "__main__":
                 followings_remove_duplicates(item)
                 b = getTotalFollowing(cate_push, following_num)
                 following_num = b
-                getUserProfile(item)
+                try:
+                    getUserProfile(item)
+                except Exception as e:
+                    print(Exception,":",e)
+                    getUserNoProfile(item)
                 sql = "update followings set mark='B' WHERE followingID='%s'" % (str(item))
                 print("It has been read one person!")
                 cur.execute(sql)
@@ -296,30 +318,3 @@ if __name__ == "__main__":
                 update_cate(cate_get, cate_push)
         cate_get = cate_get + 1
         update_cate(cate_get, cate_push)
-
-
-
-
-'''if __name__ == "__main__":
-    InstagramAPI = InstagramAPI("johnstone7523", "zhao736762141")
-    InstagramAPI.login()  # login
-    conn = pymysql.connect(host='localhost', user='root', passwd='123456', db='instagram', port=3306)
-    cur = conn.cursor()
-    sql= "insert into cateNum(cate_get,cate_push)VALUES (0,0)"
-    cur.execute(sql)
-    conn.commit()
-    cdict = get_cate()
-    cate_get = cdict["cate_get"]
-    cate_push = cdict["cate_push"]
-    print(cate_get)
-    print(cate_push)
-    follower_num = followersNum()
-    following_num = followingsNum()
-    followers_remove_duplicates('3322468295')
-    getTotalFollower(0, 1)
-    followings_remove_duplicates('3322468295')
-    getTotalFollowing(0, 1)
-    getUserProfile('3322468295')
-    cate_push = cate_push + 1
-    update_cate(cate_get, cate_push)'''
-

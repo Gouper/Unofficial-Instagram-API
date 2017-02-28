@@ -11,15 +11,16 @@ def followings_remove_duplicates(ID):
     index = 1
     sql = "REPLACE INTO remove_dup(userID,pk)VALUES (%s,%s)"
     while 1:
+        values = []
         InstagramAPI.getUserFollowings(ID, next_max_id)
         temp = InstagramAPI.LastJson
         for item in temp["users"]:
             userID = item["pk"]
             fID = str(ID)
             userIDS = str(userID)
-            param = (fID, userIDS)
-            cur.execute(sql,param)
-            conn.commit()
+            values.append((fID, userIDS))
+        cur.executemany(sql, values)
+        conn.commit()
         print(index)
         if (index >= 10 and index <= 12):
             sql2 = "select * from remove_dup"
@@ -53,13 +54,14 @@ def followers_remove_duplicates(ID):
     index = 1
     sql = "replace into remove_dup(userID,pk)VALUES (%s,%s)"
     while 1:
+        values = []
         InstagramAPI.getUserFollowers(ID, next_max_id)
         temp = InstagramAPI.LastJson
         for item in temp["users"]:
             userID = item["pk"]
-            param = (ID, userID)
-            cur.execute(sql,param)
-            conn.commit()
+            values.append((ID, userID))
+        cur.executemany(sql, values)
+        conn.commit()
         print(index)
         if (index >= 10 and index <= 12):
             sql2 = "select * from remove_dup"
